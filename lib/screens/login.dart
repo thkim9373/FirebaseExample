@@ -1,3 +1,4 @@
+import 'package:firebase_example/helper/login_background.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatelessWidget {
@@ -13,84 +14,17 @@ class AuthPage extends StatelessWidget {
       body: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          Container(
-            color: Colors.white,
+          CustomPaint(
+            size: size,
+            painter: LoginBackground(),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Container(
-                width: 200,
-                height: 200,
-                color: Colors.blue,
-              ),
+              _logoImage(size),
               Stack(
-                children: <Widget>[
-                  Container(
-                    child: Padding(
-                      padding: EdgeInsets.all(size.width * 0.05),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16)),
-                        elevation: 6,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            top: 12,
-                            bottom: 32,
-                            left: 12,
-                            right: 12,
-                          ),
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                TextFormField(
-                                  controller: _emailController,
-                                  decoration: InputDecoration(
-                                    icon: Icon(Icons.account_circle),
-                                    labelText: "Email",
-                                  ),
-                                  validator: (String value) {
-                                    if (value.isEmpty) {
-                                      return "Please input correct Email";
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                ),
-                                TextFormField(
-                                  controller: _passwordController,
-                                  decoration: InputDecoration(
-                                    icon: Icon(Icons.vpn_key),
-                                    labelText: "Password",
-                                  ),
-                                  validator: (String value) {
-                                    if (value.isEmpty) {
-                                      return "Please input correct Password";
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                ),
-                                Container(
-                                  height: 8,
-                                ),
-                                Text("Forgot Password")
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-//                  Container(
-//                    width: 100,
-//                    height: 50,
-//                    color: Colors.black,
-//                  ),
-                ],
+                children: <Widget>[_inputForm(size), _authButton(size)],
               ),
               Container(
                 height: size.height * 0.1,
@@ -105,4 +39,101 @@ class AuthPage extends StatelessWidget {
       ),
     );
   }
+
+  Widget _logoImage(Size size) => Expanded(
+        child: Padding(
+          padding: new EdgeInsets.only(
+            top: size.height * 0.05,
+            left: size.width * 0.15,
+            right: size.width * 0.15,
+          ),
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: CircleAvatar(
+              backgroundImage: NetworkImage("https://picsum.photos/200"),
+            ),
+          ),
+        ),
+      );
+
+  Widget _authButton(Size size) => Positioned(
+        left: size.width * 0.15,
+        right: size.width * 0.15,
+        bottom: 0,
+        child: SizedBox(
+          height: 50,
+          child: RaisedButton(
+            child: Text(
+              "Login",
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
+            color: Colors.blue,
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                print(_passwordController.text.toString());
+              }
+            },
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          ),
+        ),
+      );
+
+  Widget _inputForm(Size size) => Container(
+        child: Padding(
+          padding: EdgeInsets.all(size.width * 0.05),
+          child: Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            elevation: 6,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 12,
+                bottom: 32,
+                left: 12,
+                right: 12,
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.account_circle),
+                        labelText: "Email",
+                      ),
+                      validator: (String value) {
+                        if (value.isEmpty) {
+                          return "Please input correct Email";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    TextFormField(
+                      obscureText: true,
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.vpn_key),
+                        labelText: "Password",
+                      ),
+                      validator: (String value) {
+                        if (value.isEmpty) {
+                          return "Please input correct Password";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    Container(
+                      height: 8,
+                    ),
+                    Text("Forgot Password")
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
 }
